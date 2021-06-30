@@ -1,0 +1,37 @@
+type Commet @model @key(name: "byVideo", fields: ["videoID"]) @auth(rules: [{allow: owner, operations: [read, create, update, delete]}, {allow: private, operations: [read, create]}]) @key(name: "byUser", fields: ["userID"]) {
+  id: ID!
+  commet: String!
+  likes: Int!
+  dislikes: Int!
+  replies: Int!
+  videoID: ID
+  Video: Video @connection
+  User: User @connection
+  userID: ID
+}
+
+type User @model @auth(rules: [{allow: owner, operations: [read]}, {allow: private, operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+  image: String
+  subscribers: Int
+  Videos: [Video] @connection(keyName: "byUser", fields: ["id"])
+  Commets: [Commet] @connection(keyName: "byUser", fields: ["id"])
+  sub: String
+}
+
+type Video @model @key(name: "byUser", fields: ["userID"]) @auth(rules: [{allow: owner, operations: [read, create, update, delete]}, {allow: private, operations: [read, create]}]) {
+  id: ID!
+  title: String
+  thumbnail: String!
+  videoUrl: String!
+  duration: Float!
+  views: String!
+  tags: String
+  likes: Int!
+  dislikes: Int!
+  User: User @connection
+  Commets: [Commet] @connection(keyName: "byVideo", fields: ["id"])
+  userID: ID
+}
+ 
